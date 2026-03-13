@@ -1,0 +1,19 @@
+# Maven
+target/
+*.jar
+
+# Built executable
+dist/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Temporary
+NOTES.txt
+run.bat

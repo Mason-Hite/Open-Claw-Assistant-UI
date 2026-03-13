@@ -1,0 +1,51 @@
+@startuml
+
+title OpenClaw UI - Final Project UML Diagram
+
+class MainWindow {
+  +start(Stage stage)
+}
+
+class ChatPanel {
+  -chatHistory : ListView<String>
+  -historyManager : ChatHistoryManager
+  -titleLabel : Label
+  -inputArea : TextArea
+  -currentBotName : String
+  +ChatPanel(Stage, OpenClawClient)
+  +updateBotName(String)
+}
+
+class FilePanel {
+  -currentFolder : File
+  -fileList : ListView<File>
+  -pathLabel : Label
+  +FilePanel(Stage)
+  -refresh()
+}
+
+class SettingsDialog {
+  +SettingsDialog(Stage)
+}
+
+class OpenClawClient {
+  -apiUrl : String
+  +sendMessage(String, Consumer<String>)
+  +testConnection(String) : boolean
+  +reloadSettings()
+}
+
+class ChatHistoryManager {
+  -historyFile : File
+  +ChatHistoryManager()
+  +save(ListView<String>)
+  +load(ListView<String>)
+  +clear()
+}
+
+MainWindow --> ChatPanel
+MainWindow --> FilePanel
+ChatPanel --> OpenClawClient
+ChatPanel --> ChatHistoryManager
+
+@enduml
