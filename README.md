@@ -45,8 +45,8 @@ The app remembers your settings and chat history between sessions.
 ## Images of UI
 
 ![Main Interface](images/interface.png)
-*RIGHT: Main chat window showing custom bot name, expandable input, and persistent conversation*
-*LEFT: Navigation-able working folder with double-click support for folders and files*
+- *RIGHT: Main chat window showing custom bot name, expandable input, and persistent conversation*
+- *LEFT: Navigation-able working folder with double-click support for folders and files*
 
 ![Settings Dialog](images/settings.png)  
 *Settings window for configuring endpoint and bot name*
