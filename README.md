@@ -42,11 +42,11 @@ The app remembers your settings and chat history between sessions.
 
 *No additional installation is required, everything is bundled.*
 
-## Sample Output
+## Images of UI
 
 ![Main Interface](images/interface.png)
 *RIGHT: Main chat window showing custom bot name, expandable input, and persistent conversation*
-*LEFT: Navigable working folder with double-click support for folders and files*
+*LEFT: Navigation-able working folder with double-click support for folders and files*
 
 ![Settings Dialog](images/settings.png)  
 *Settings window for configuring endpoint and bot name*
