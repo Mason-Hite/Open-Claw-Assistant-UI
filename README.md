@@ -3,6 +3,23 @@
 ## Project Description
 OpenClaw UI is a modern JavaFX desktop application that provides an intuitive graphical interface for interacting with a locally running AI system (OpenClaw / Claw Bot gateway). Users can chat with their AI, manage a persistent working folder for training documents, double-click files to open them, customize the bot name, and save chat history automatically. The app is fully packaged as a single `.exe` so anyone can use it without installing Java or JavaFX.
 
+## Quick Download
+- **Open** OpenClawUI-DOWNLOAD_ZIP (https://github.com/Mason-Hite/Open-Claw-Assistant-UI/tree/main/OpenClawUI-DOWNLOAD_ZIP)
+- **Click On** OpenClawUI-1.0.0.zip (https://github.com/Mason-Hite/Open-Claw-Assistant-UI/blob/main/OpenClawUI-DOWNLOAD_ZIP/OpenClawUI-1.0.0.zip)
+- **CLICK** "View raw" (https://github.com/Mason-Hite/Open-Claw-Assistant-UI/raw/refs/heads/main/OpenClawUI-DOWNLOAD_ZIP/OpenClawUI-1.0.0.zip)
+- The Zip (38.3 mbs approximately) will start to download
+- After download, extract wherever. Continue below to "Configuration & Execution".
+
+## Configuration & Execution
+1. Run `OpenClawUI.exe`
+2. Click **🔗 Connect to Bot**
+3. Enter your local OpenClaw endpoint (usually `http://localhost:18789/api/chat` or similar)
+4. Click **Test Connection**
+5. Set your **Working Folder** (where your training files live)
+6. Start chatting!
+
+The app remembers your settings and chat history between sessions.
+
 ## Features
 - Real-time chat with expandable multi-line input
 - Persistent chat history saved in `AppData`
@@ -25,21 +42,11 @@ OpenClaw UI is a modern JavaFX desktop application that provides an intuitive gr
 
 *No additional installation is required, everything is bundled.*
 
-## Configuration & Execution
-1. Run `OpenClawUI.exe`
-2. Click **🔗 Connect to Bot**
-3. Enter your local OpenClaw endpoint (usually `http://localhost:18789/api/chat` or similar)
-4. Click **Test Connection**
-5. Set your **Working Folder** (where your training files live)
-6. Start chatting!
-
-The app remembers your settings and chat history between sessions.
-
-## Sample Output
+## Images of UI
 
 ![Main Interface](images/interface.png)
-*RIGHT: Main chat window showing custom bot name, expandable input, and persistent conversation*
-*LEFT: Navigable working folder with double-click support for folders and files*
+- *RIGHT: Main chat window showing custom bot name, expandable input, and persistent conversation*
+- *LEFT: Navigation-able working folder with double-click support for folders and files*
 
 ![Settings Dialog](images/settings.png)  
 *Settings window for configuring endpoint and bot name*
