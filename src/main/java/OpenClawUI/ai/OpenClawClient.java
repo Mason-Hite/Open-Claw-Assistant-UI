@@ -37,6 +37,11 @@ public class OpenClawClient {
         Preferences prefs = Preferences.userNodeForPackage(OpenClawUI.ui.MainWindow.class);
         this.apiUrl = prefs.get("apiUrl_v2", "http://192.168.137.19:18789/v1/chat/completions"); // ← fresh default
         this.apiToken = prefs.get("apiToken_v2", "");
+        System.out.println("=== DEBUG: Loaded Settings ===");
+        System.out.println("API URL loaded: " + this.apiUrl);
+        System.out.println("Token loaded: "
+                + (this.apiToken.isEmpty() ? "[EMPTY]" : "[HAS TOKEN — " + this.apiToken.length() + " chars]"));
+        System.out.println("=============================");
     }
 
     /**
