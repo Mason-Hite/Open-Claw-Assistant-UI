@@ -9,23 +9,13 @@ import javafx.application.Platform;
 /**
  * OpenClawClient - Handles all communication with the local OpenClaw AI
  * gateway.
- * 
- * Uses Java's built-in HttpClient to send messages asynchronously. Was a very
- * good option because it is very modern and lightweight. Also to avoid
- * dependancies.
- * 
- * Runs network calls on a background thread to keep the UI responsive.
+ * Updated to use the modern OpenAI-compatible format + token support.
  */
 public class OpenClawClient {
 
     private final HttpClient client;
     private String apiUrl;
 
-    /**
-     * Constructor that loads the saved API URL from user preferences.
-     * Creates a reusable HttpClient with a reasonable timeout, incase it just takes
-     * a while to respond.
-     */
     public OpenClawClient() {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
@@ -33,36 +23,30 @@ public class OpenClawClient {
         loadApiUrlFromSettings();
     }
 
-    /**
-     * Loads (or reloads) the API endpoint URL from saved preferences. Called on
-     * start and whenever the user changes settings.
-     */
     private void loadApiUrlFromSettings() {
         Preferences prefs = Preferences.userNodeForPackage(OpenClawUI.ui.MainWindow.class);
-        this.apiUrl = prefs.get("apiUrl", "http://localhost:18789/api/chat");
+        this.apiUrl = prefs.get("apiUrl", "http://127.0.0.1:18789/v1/chat/completions");
     }
 
-    /**
-     * Sends a user message to the local AI bot.
-     * 
-     * @param message  the text the user typed
-     * @param callback called when a reply is received (runs on JavaFX thread)
-     */
+    public void reloadSettings() {
+        loadApiUrlFromSettings();
+    }
+
     public void sendMessage(String message, java.util.function.Consumer<String> callback) {
         new Thread(() -> {
             try {
-                // Escapes special characters so json doesn't break.
-                String escaped = message.replace("\\", "\\\\")
-                        .replace("\"", "\\\"")
-                        .replace("\n", "\\n")
-                        .replace("\r", "\\r");
-
-                String json = "{\"message\":\"" + escaped + "\"}";
+                String json = """
+                        {
+                          "messages": [
+                            {"role": "user", "content": "%s"}
+                          ]
+                        }
+                        """.formatted(message.replace("\"", "\\\""));
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(apiUrl))
                         .header("Content-Type", "application/json")
-                        .timeout(Duration.ofSeconds(40))
+                        .timeout(Duration.ofSeconds(30))
                         .POST(HttpRequest.BodyPublishers.ofString(json))
                         .build();
 
@@ -76,30 +60,26 @@ public class OpenClawClient {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Platform.runLater(() -> callback.accept("❌ Connection Error:\nCheck HTTP port in 'Connect to Bot' ?"));
+                Platform.runLater(() -> callback.accept("❌ Connection Error: Check token and endpoint in Settings"));
             }
         }).start();
     }
 
-    /**
-     * Tests if the bot is reachable at the given URL.
-     * Used by the button "Test Connection" in the Settings.
-     * 
-     * @param testUrl the endpoint to test
-     * @return true if the bot responds successfully
-     */
     public static boolean testConnection(String testUrl) {
-        try (HttpClient testClient = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(5))
-                .build()) {
-
-            String testJson = "{\"message\":\"test connection\"}";
+        try (HttpClient testClient = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(5)).build()) {
+            String json = """
+                    {
+                      "messages": [
+                        {"role": "user", "content": "test"}
+                      ]
+                    }
+                    """;
 
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create(testUrl))
                     .header("Content-Type", "application/json")
                     .timeout(Duration.ofSeconds(8))
-                    .POST(HttpRequest.BodyPublishers.ofString(testJson))
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
 
             HttpResponse<String> resp = testClient.send(req, HttpResponse.BodyHandlers.ofString());
@@ -109,21 +89,7 @@ public class OpenClawClient {
         }
     }
 
-    /**
-     * Simple response parser. Just uses ".trim()" to remove extra spaces at
-     * beginning and end
-     * 
-     * Could make this smarter (JSON parsing, etc.).
-     */
     private String parseClawResponse(String rawResponse) {
         return rawResponse != null ? rawResponse.trim() : "No response from Claw Bot.";
-    }
-
-    /**
-     * Reloads the API URL after the user changes Settings.
-     * Called from the MainWindow class after settings closes.
-     */
-    public void reloadSettings() {
-        loadApiUrlFromSettings();
     }
 }
