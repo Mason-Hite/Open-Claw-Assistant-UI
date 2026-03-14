@@ -33,14 +33,22 @@ public class SettingsDialog extends Dialog<Void> {
         Preferences prefs = Preferences.userNodeForPackage(MainWindow.class);
 
         // Pre-fill with last used values (super user friendly)
-        TextField apiUrlField = new TextField(prefs.get("apiUrl", "http://localhost:18789/api/chat"));
+        TextField apiUrlField = new TextField(prefs.get("apiUrl", "http://192.168.137.19:18789/v1/chat/completions")); // ←
+                                                                                                                       // slight
+                                                                                                                       // update:
+                                                                                                                       // correct
+                                                                                                                       // default
         apiUrlField.setPrefWidth(450);
+
+        TextField tokenField = new TextField(prefs.get("apiToken", "")); // ← ADDED: token box
+        tokenField.setPrefWidth(450);
+        tokenField.setPromptText("Paste your Bearer token here");
 
         TextField nameField = new TextField(prefs.get("botName", "Claw Bot"));
         nameField.setPrefWidth(450);
 
         Button defaultBtn = new Button("Use Default Localhost");
-        defaultBtn.setOnAction(e -> apiUrlField.setText("http://localhost:18789/api/chat"));
+        defaultBtn.setOnAction(e -> apiUrlField.setText("http://localhost:18789/v1/chat/completions"));
 
         Button testBtn = new Button("Test Connection");
         Label statusLabel = new Label("Click Test to verify connection");
@@ -48,7 +56,8 @@ public class SettingsDialog extends Dialog<Void> {
         // Basic beginner button
         testBtn.setOnAction(e -> {
             String url = apiUrlField.getText().trim();
-            if (OpenClawClient.testConnection(url)) {
+            String token = tokenField.getText().trim(); // ← ADDED
+            if (OpenClawClient.testConnection(url, token)) { // ← slight update: now passes token
                 statusLabel.setText("✅ Connected successfully!");
                 statusLabel.setStyle("-fx-text-fill: green; -fx-font-weight: bold;");
             } else {
@@ -63,11 +72,13 @@ public class SettingsDialog extends Dialog<Void> {
         grid.setPadding(new Insets(20));
         grid.add(new Label("Bot HTTP Endpoint:"), 0, 0);
         grid.add(apiUrlField, 1, 0);
-        grid.add(new Label("Bot Name:"), 0, 1);
-        grid.add(nameField, 1, 1);
-        grid.add(defaultBtn, 1, 2);
-        grid.add(testBtn, 1, 3);
-        grid.add(statusLabel, 1, 4);
+        grid.add(new Label("Bearer Token:"), 0, 1); // ← ADDED row
+        grid.add(tokenField, 1, 1); // ← ADDED row
+        grid.add(new Label("Bot Name:"), 0, 2);
+        grid.add(nameField, 1, 2);
+        grid.add(defaultBtn, 1, 3);
+        grid.add(testBtn, 1, 4);
+        grid.add(statusLabel, 1, 5);
 
         getDialogPane().setContent(grid);
         getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
@@ -76,6 +87,7 @@ public class SettingsDialog extends Dialog<Void> {
         setResultConverter(btn -> {
             if (btn == ButtonType.OK) {
                 prefs.put("apiUrl", apiUrlField.getText().trim());
+                prefs.put("apiToken", tokenField.getText().trim()); // ← ADDED
                 prefs.put("botName", nameField.getText().trim());
             }
             return null;

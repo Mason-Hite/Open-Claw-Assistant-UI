@@ -15,6 +15,7 @@ public class OpenClawClient {
 
     private final HttpClient client;
     private String apiUrl;
+    private String apiToken; // ← ADDED
 
     /**
      * Constructor that loads the saved API URL from user preferences.
@@ -25,7 +26,7 @@ public class OpenClawClient {
         this.client = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
-        loadApiUrlFromSettings();
+        loadApiUrlFromSettings(); // ← now also loads token
     }
 
     /**
@@ -35,6 +36,7 @@ public class OpenClawClient {
     private void loadApiUrlFromSettings() {
         Preferences prefs = Preferences.userNodeForPackage(OpenClawUI.ui.MainWindow.class);
         this.apiUrl = prefs.get("apiUrl", "http://localhost:18789/v1/chat/completions");
+        this.apiToken = prefs.get("apiToken", ""); // ← ADDED
     }
 
     /**
@@ -51,11 +53,14 @@ public class OpenClawClient {
                         .replace("\n", "\\n")
                         .replace("\r", "\\r");
 
-                String json = "{\"message\":\"" + escaped + "\"}";
+                // ← CHANGED: correct OpenAI format (your bot now requires this)
+                String json = "{\"model\":\"openclaw:main\",\"messages\":[{\"role\":\"user\",\"content\":\"" + escaped
+                        + "\"}]}";
 
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(apiUrl))
                         .header("Content-Type", "application/json")
+                        .header("Authorization", "Bearer " + apiToken) // ← ADDED: your token
                         .timeout(Duration.ofSeconds(40))
                         .POST(HttpRequest.BodyPublishers.ofString(json))
                         .build();
@@ -82,16 +87,18 @@ public class OpenClawClient {
      * @param testUrl the endpoint to test
      * @return true if the bot responds successfully
      */
-    public static boolean testConnection(String testUrl) {
+    public static boolean testConnection(String testUrl, String token) { // ← slight update: now takes token
         try (HttpClient testClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(5))
                 .build()) {
 
-            String testJson = "{\"message\":\"test connection\"}";
+            // ← CHANGED: correct OpenAI format
+            String testJson = "{\"model\":\"openclaw:main\",\"messages\":[{\"role\":\"user\",\"content\":\"test connection\"}]}";
 
             HttpRequest req = HttpRequest.newBuilder()
                     .uri(URI.create(testUrl))
                     .header("Content-Type", "application/json")
+                    .header("Authorization", "Bearer " + token) // ← ADDED
                     .timeout(Duration.ofSeconds(8))
                     .POST(HttpRequest.BodyPublishers.ofString(testJson))
                     .build();
