@@ -51,6 +51,7 @@ public class MainWindow extends Application {
         // can get it too work)
         settingsItem.setOnAction(e -> {
             new SettingsDialog(stage).showAndWait();
+            client.reloadSettings(); // ← THIS FIXES THE CACHE STICK
             chatPanel.updateBotName(java.util.prefs.Preferences
                     .userNodeForPackage(MainWindow.class)
                     .get("botName", "Claw Bot"));

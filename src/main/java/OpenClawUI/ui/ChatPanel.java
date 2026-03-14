@@ -62,7 +62,10 @@ public class ChatPanel extends VBox {
         undoBtn.setStyle(
                 "-fx-background-color: #f39c12; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 9999;");
 
-        connectBtn.setOnAction(e -> new SettingsDialog(stage).showAndWait());
+        connectBtn.setOnAction(e -> {
+            new SettingsDialog(stage).showAndWait();
+            client.reloadSettings(); // ← THIS FIXES THE CACHE STICK
+        });
         clearBtn.setOnAction(e -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Clear Chat");
