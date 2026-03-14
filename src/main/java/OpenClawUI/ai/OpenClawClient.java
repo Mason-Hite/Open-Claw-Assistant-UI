@@ -35,8 +35,8 @@ public class OpenClawClient {
      */
     private void loadApiUrlFromSettings() {
         Preferences prefs = Preferences.userNodeForPackage(OpenClawUI.ui.MainWindow.class);
-        this.apiUrl = prefs.get("apiUrl", "http://localhost:18789/v1/chat/completions");
-        this.apiToken = prefs.get("apiToken", ""); // ← ADDED
+        this.apiUrl = prefs.get("apiUrl_v2", "http://192.168.137.19:18789/v1/chat/completions"); // ← fresh default
+        this.apiToken = prefs.get("apiToken_v2", "");
     }
 
     /**

@@ -33,14 +33,11 @@ public class SettingsDialog extends Dialog<Void> {
         Preferences prefs = Preferences.userNodeForPackage(MainWindow.class);
 
         // Pre-fill with last used values (super user friendly)
-        TextField apiUrlField = new TextField(prefs.get("apiUrl", "http://192.168.137.19:18789/v1/chat/completions")); // ←
-                                                                                                                       // slight
-                                                                                                                       // update:
-                                                                                                                       // correct
-                                                                                                                       // default
+        TextField apiUrlField = new TextField(
+                prefs.get("apiUrl_v2", "http://192.168.137.19:18789/v1/chat/completions"));
         apiUrlField.setPrefWidth(450);
 
-        TextField tokenField = new TextField(prefs.get("apiToken", "")); // ← ADDED: token box
+        TextField tokenField = new TextField(prefs.get("apiToken_v2", ""));
         tokenField.setPrefWidth(450);
         tokenField.setPromptText("Paste your Bearer token here");
 
@@ -86,8 +83,8 @@ public class SettingsDialog extends Dialog<Void> {
         // Save settings when user clicks OK
         setResultConverter(btn -> {
             if (btn == ButtonType.OK) {
-                prefs.put("apiUrl", apiUrlField.getText().trim());
-                prefs.put("apiToken", tokenField.getText().trim()); // ← ADDED
+                prefs.put("apiUrl_v2", apiUrlField.getText().trim());
+                prefs.put("apiToken_v2", tokenField.getText().trim());
                 prefs.put("botName", nameField.getText().trim());
             }
             return null;
