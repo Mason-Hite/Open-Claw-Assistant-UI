@@ -14,9 +14,11 @@ OpenClaw UI is a modern JavaFX desktop application that provides an intuitive gr
 1. Run `OpenClawUI.exe`
 2. Click **🔗 Connect to Bot**
 3. Enter your local OpenClaw endpoint (usually `http://localhost:18789/api/chat` or similar)
-4. Click **Test Connection**
-5. Set your **Working Folder** (where your training files live)
-6. Start chatting!
+4. Enter your bearer token (found with "openclaw config get gateway.auth.token" in bash or "wsl openclaw config get gateway.auth.token" in powershell)
+- If you get an "__OPENCLAW_REDACTED__", use "wsl cat ~/.openclaw/openclaw.json" and find Token.
+5. Click **Test Connection**
+6. Set your **Working Folder** (where your training files live)
+7. Start chatting!
 
 The app remembers your settings and chat history between sessions.
 
